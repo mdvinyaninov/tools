@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+
+    <queries>
+        <query interval="60000">
+            <name>pg_stat_activity_by_wait_event</name>
+            <text><![CDATA[SELECT datname, wait_event_type, wait_event, count(*) as cnt FROM pg_stat_activity WHERE wait_event IS NOT NULL GROUP BY datname, wait_event_type, wait_event;]]></text>
+            <columns>
+                <column type="TAG">datname</column>
+                <column type="TAG">wait_event_type</column>
+                <column type="TAG">wait_event</column>
+                <column type="FIELD" dataType="BIGINTEGER">process_count</column>
+            </columns>
+        </query>
+    </queries>
+
+    <collectors>
+        <collector name="localhost" interval="60000">
+            <queries>
+                <queryRef>pg_stat_activity_by_wait_event</queryRef>
+            </queries>
+            <postgresql>
+                <url>jdbc:postgresql://localhost:5432/postgres</url>
+                <username>monitor</username>
+                <password>monitor</password>
+            </postgresql>
+            <influxdb>
+                <url>http://localhost:8086</url>
+                <database>monitor</database>
+                <retentionPolicy>30d</retentionPolicy>
+                <username></username>
+                <password></password>
+            </influxdb>
+        </collector>
+
+    </collectors>
+
+</configuration>
