@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="configuration" type="xmlConfiguration"/>
+
+  <xs:complexType name="collectorConfig">
+    <xs:sequence>
+      <xs:element name="influxdb" type="influxDBConfig" minOccurs="0"/>
+      <xs:element name="oracle" type="oracleSourceConfig" minOccurs="0"/>
+      <xs:element name="postgresql" type="postgreSQLSourceConfig" minOccurs="0"/>
+      <xs:element name="queries" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="queryRef" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="interval" type="xs:int"/>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="influxDBConfig">
+    <xs:sequence>
+      <xs:element name="database" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+      <xs:element name="retentionPolicy" type="xs:string" minOccurs="0"/>
+      <xs:element name="url" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="oracleSourceConfig">
+    <xs:sequence>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+      <xs:element name="url" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="postgreSQLSourceConfig">
+    <xs:sequence>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+      <xs:element name="url" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="column">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="dataType" type="dataType"/>
+        <xs:attribute name="type" type="columnType"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="queryConfig">
+    <xs:sequence>
+      <xs:element name="columns" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="column" type="column" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="text" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="interval" type="xs:int"/>
+    <xs:attribute name="send" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="xmlConfiguration">
+    <xs:sequence>
+      <xs:element name="queries" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="query" type="queryConfig" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="collectors" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="collector" type="collectorConfig" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cdataAdapter">
+    <xs:complexContent>
+      <xs:extension base="xmlAdapter">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="xmlAdapter" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:simpleType name="dataType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BOOLEAN"/>
+      <xs:enumeration value="INTEGER"/>
+      <xs:enumeration value="BIGINTEGER"/>
+      <xs:enumeration value="BIGDECIMAL"/>
+      <xs:enumeration value="FLOAT"/>
+      <xs:enumeration value="TEXT"/>
+      <xs:enumeration value="TIMESTAMP"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="columnType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FIELD"/>
+      <xs:enumeration value="TAG"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

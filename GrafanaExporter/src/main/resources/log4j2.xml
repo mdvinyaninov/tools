@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="name">GrafanaExporter</Property>
+        <Property name="target">iteco.emul</Property>
+        <Property name="path">logs</Property>
+        <Property name="level">INFO</Property>
+        <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss} %-5p %c{10} %M:%L - %m%n</Property>
+    </Properties>
+    <Filter type="ThresholdFilter" level="trace"/>
+    <Appenders>
+        <RollingFile name="File" fileName="${path}\\${name}.log" filePattern="${path}\\%d{yyyyMMdd}_${name}_%i.log.zip">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="2"/>
+        </RollingFile>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="${level}">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

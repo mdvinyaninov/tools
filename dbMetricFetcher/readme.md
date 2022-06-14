@@ -35,8 +35,9 @@ XML Configuration file which allows to configure:
 + sql queries to be executed;
 + data source and output;
 
-XML Document Structure:
+[XSD Schema](schema1.xsd)
 
+XML Document Structure:
 
 | Element                                          | Element Type | Data Type | Description                                                                                                                                                                                                                                                  |
 |--------------------------------------------------|--------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
